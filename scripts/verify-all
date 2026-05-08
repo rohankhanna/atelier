@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+test -f README.md
+test -f docs/ARCHITECTURE.md
+test -f docs/INTEGRATION_CONTRACT.md
+test -f docs/architecture.mmd
+test -f docs/decisions/0001-adopt-pass.md
+
+grep -q "pass-backed" README.md
+grep -q "credential-header proxy" README.md
+grep -q "pass -> Atelier custody -> stand-in token" docs/ARCHITECTURE.md
+grep -q "local-client" docs/INTEGRATION_CONTRACT.md
+
+if grep -R "uv run atelier mint" README.md docs >/dev/null; then
+  echo "stale atelier mint command found" >&2
+  exit 1
+fi
+
+if grep -R --exclude-dir="__pycache__" "Overarch\\|codex-proxy\\|Callosum\\|Relay\\|Hermes\\|PROJECT_INTENT\\|AGENTS\\|prior-art\\|vault_path" README.md docs src tests >/dev/null; then
+  echo "internal or private-only term found in public surface" >&2
+  exit 1
+fi
+
+uv run pytest
+
+echo "atelier public surface verified"

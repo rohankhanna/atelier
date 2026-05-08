@@ -1,0 +1,18 @@
+flowchart LR
+    passdb[pass encrypted store]
+    atelier[Atelier custody and proxy]
+    standin[Local stand-in token]
+    client[Local client]
+    upstream[Provider upstream]
+    manager[Local process manager]
+
+    manager -->|start first| atelier
+    manager -->|configure endpoint| client
+    passdb -->|auth bundle| atelier
+    atelier -->|rotated bundle back to pass| passdb
+    atelier -->|mint scoped token| standin
+    standin -->|local bearer| client
+    client -->|unsigned upstream request plus stand-in| atelier
+    atelier -->|inject provider credentials| upstream
+    upstream -->|response| atelier
+    atelier -->|response without provider tokens| client

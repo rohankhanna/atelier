@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Local private state
+state/
+*.sqlite
+*.sqlite3
+*.db
+
+# Secrets and credentials
+*.key
+*.pem
+*.token
+auth.json
+credentials.json
+vaults/
+originals/
+
+.hot-reload.watch
+# hot-reload state
+AGENTS.md.sha256
+# feedback-hub integration
+feedback
+learnings
