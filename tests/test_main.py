@@ -13,7 +13,7 @@ def test_create_custody_from_env_defaults_to_pass_store_and_oauth_provider(monke
 
     assert isinstance(custody._store, PassStore)
     assert custody._refresh_url == "https://auth.example.com/oauth/token"
-    assert custody._client_id == "your-oauth-client-id"
+    assert custody._client_id == ""
     assert custody._path_prefix == "llm/oauth-provider/accounts"
 
 

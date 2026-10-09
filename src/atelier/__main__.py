@@ -15,7 +15,7 @@ from atelier.server import create_app
 from atelier.standin import StandInTokenLedger
 
 DEFAULT_REFRESH_URL = "https://auth.example.com/oauth/token"
-DEFAULT_CLIENT_ID = "your-oauth-client-id"
+DEFAULT_CLIENT_ID = ""
 DEFAULT_PASS_PATH_PREFIX = "llm/oauth-provider/accounts"
 DEFAULT_CLOUD_PROVIDER_A_PASS_PATH_PREFIX = "llm/cloud-provider-a/accounts"
 DEFAULT_CLOUD_PROVIDER_B_PASS_PATH_PREFIX = "llm/cloud-provider-b/accounts"

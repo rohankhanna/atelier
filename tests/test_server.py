@@ -32,7 +32,7 @@ class FakeCustody:
 
 SYNTHETIC_HEADERS = {
     "x-oauth-provider-api-primary-used-percent": "12.5",
-    "X-OAuth Provider API-Secondary-Used-Percent": "34.5",
+    "x-oauth-provider-api-secondary-used-percent": "34.5",
     "x-oauth-provider-api-plan-type": "plus",
     "connection": "keep-alive",
     "content-length": "9999",

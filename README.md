@@ -14,7 +14,7 @@ Atelier runs as a dedicated system user with its own GPG key and pass store. Thi
 | Client tools | No | HTTP proxy with stand-in tokens |
 | Operator | No | Write-only via `atelier load` subcommands |
 
-See [deploy/operator-isolation-setup.md](deploy/operator-isolation-setup.md) for the full setup guide, and [docs/decisions/0002-operator-isolated-custody.md](docs/decisions/0002-operator-isolated-custody.md) for the decision record.
+See [docs/decisions/0002-operator-isolated-custody.md](docs/decisions/0002-operator-isolated-custody.md) for the decision record.
 
 ## Status
 
