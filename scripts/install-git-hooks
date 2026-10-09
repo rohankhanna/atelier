@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+hook_path="$repo_root/.git/hooks/pre-push"
+
+install -m 0755 "$repo_root/scripts/public-push-guard" "$hook_path"
+
+printf 'installed pre-push hook: %s\n' "$hook_path"

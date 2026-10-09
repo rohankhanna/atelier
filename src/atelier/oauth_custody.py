@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import base64
 import json
 import time
@@ -55,9 +56,24 @@ class OAuthCustody:
         self._refresh_url = refresh_url
         self._client_id = client_id
         self._now = now or time.time
+        self._locks_guard = asyncio.Lock()
+        self._account_locks: dict[str, asyncio.Lock] = {}
 
-    def access_grant(self, account: str) -> AccessGrant:
+    async def access_grant(self, account: str) -> AccessGrant:
         path = self._pass_path(account)
+        lock = await self._account_lock(path)
+        async with lock:
+            return await asyncio.to_thread(self._access_grant_locked, path)
+
+    async def _account_lock(self, path: str) -> asyncio.Lock:
+        async with self._locks_guard:
+            lock = self._account_locks.get(path)
+            if lock is None:
+                lock = asyncio.Lock()
+                self._account_locks[path] = lock
+            return lock
+
+    def _access_grant_locked(self, path: str) -> AccessGrant:
         bundle = parse_auth_json(self._store.show(path))
         if should_refresh(bundle, now=self._now()):
             bundle = self._refresh(bundle)
@@ -73,6 +89,34 @@ class OAuthCustody:
         if not account or "/" in account:
             raise ValueError("account must be a single pass path segment")
         return f"{self._path_prefix}/{account}/auth-json"
+
+    async def peek(self, account: str) -> dict[str, Any]:
+        """Return non-secret metadata for an OAuth account without refreshing.
+
+        Loads the current bundle from pass and returns account_id, access-token
+        expiry, whether the token is within the refresh safety window, and the
+        last refresh timestamp. Never returns access_token, refresh_token,
+        id_token, or raw bundle contents. Does not trigger a refresh.
+        """
+        path = self._pass_path(account)
+        return await asyncio.to_thread(self._peek_locked, path)
+
+    def _peek_locked(self, path: str) -> dict[str, Any]:
+        try:
+            raw = self._store.show(path)
+        except Exception:
+            return {"account_id": None, "access_token_expires_at": None,
+                    "needs_refresh": False, "last_refresh": None,
+                    "available": False}
+        bundle = parse_auth_json(raw)
+        now = self._now()
+        return {
+            "account_id": bundle.account_id,
+            "access_token_expires_at": bundle.expires_at,
+            "needs_refresh": should_refresh(bundle, now=now),
+            "last_refresh": bundle.raw.get("last_refresh"),
+            "available": True,
+        }
 
     def _refresh(self, bundle: OAuthBundle) -> OAuthBundle:
         payload = {

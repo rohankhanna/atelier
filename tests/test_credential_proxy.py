@@ -11,7 +11,7 @@ class FakeCustody:
     def __init__(self) -> None:
         self.requests: list[str] = []
 
-    def access_grant(self, account: str) -> AccessGrant:
+    async def access_grant(self, account: str) -> AccessGrant:
         self.requests.append(account)
         return AccessGrant(
             access_token="PROVIDER_ACCESS_TOKEN_PLACEHOLDER",
@@ -24,12 +24,13 @@ class CaptureTransport:
     def __init__(self) -> None:
         self.request: ProxyRequest | None = None
 
-    def send(self, request: ProxyRequest) -> ProxyResponse:
+    async def send(self, request: ProxyRequest) -> ProxyResponse:
         self.request = request
         return ProxyResponse(status_code=200, headers={}, body=b"ok")
 
 
-def test_proxy_injects_provider_credentials_after_stand_in_validation() -> None:
+@pytest.mark.anyio
+async def test_proxy_injects_provider_credentials_after_stand_in_validation() -> None:
     ledger = StandInTokenLedger(now=lambda: 1000)
     stand_in = ledger.mint(
         audience="local-client",
@@ -41,7 +42,7 @@ def test_proxy_injects_provider_credentials_after_stand_in_validation() -> None:
     transport = CaptureTransport()
     proxy = CredentialProxy(ledger=ledger, custody=custody, transport=transport)
 
-    response = proxy.proxy_upstream(
+    response = await proxy.proxy_upstream(
         stand_in_token=stand_in.token,
         request=ProxyRequest(
             method="POST",
@@ -59,13 +60,14 @@ def test_proxy_injects_provider_credentials_after_stand_in_validation() -> None:
     assert "STAND_IN_SHOULD_NOT_FORWARD" not in transport.request.headers["Authorization"]
 
 
-def test_proxy_rejects_invalid_stand_in_before_custody_lookup() -> None:
+@pytest.mark.anyio
+async def test_proxy_rejects_invalid_stand_in_before_custody_lookup() -> None:
     ledger = StandInTokenLedger(now=lambda: 1000)
     custody = FakeCustody()
     proxy = CredentialProxy(ledger=ledger, custody=custody, transport=CaptureTransport())
 
     with pytest.raises(PermissionError):
-        proxy.proxy_upstream(
+        await proxy.proxy_upstream(
             stand_in_token="ati_missing_secret",
             request=ProxyRequest(method="GET", url="https://example.invalid", headers={}, body=b""),
         )

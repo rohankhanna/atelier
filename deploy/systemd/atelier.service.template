@@ -1,0 +1,46 @@
+# atelier.service - local credential-custody service.
+#
+# This file is a TEMPLATE. Do not install it directly. The install
+# script in this directory substitutes operator-specific values and
+# writes the rendered unit to /etc/systemd/system/atelier.service.
+#
+# Atelier runs as a dedicated service user so that only the Atelier
+# process can decrypt credentials from the service user's pass store.
+
+[Unit]
+Description=Atelier local credential-custody service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=atelier
+Group=atelier
+RuntimeDirectory=atelier
+StateDirectory=atelier
+
+# The venv is created by the install script at /var/lib/atelier/venv.
+WorkingDirectory=/var/lib/atelier
+Environment="PATH=/var/lib/atelier/venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="ATELIER_HOST=127.0.0.1"
+Environment="ATELIER_PORT=7342"
+Environment="ATELIER_REFRESH_URL=https://auth.example.com/oauth/token"
+Environment="ATELIER_CLIENT_ID=your-oauth-client-id"
+Environment="ATELIER_PASS_PATH_PREFIX=llm/oauth-provider/accounts"
+Environment="ATELIER_STATE_DIR=/var/lib/atelier"
+ExecStart=/var/lib/atelier/venv/bin/atelier serve
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=30
+StandardOutput=journal
+StandardError=journal
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/atelier /run/user
+
+[Install]
+WantedBy=multi-user.target

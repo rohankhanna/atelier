@@ -16,3 +16,9 @@ flowchart LR
     atelier -->|inject provider credentials| upstream
     upstream -->|response| atelier
     atelier -->|response without provider tokens| client
+
+    passdb -.->|session-cookie jar| atelier
+    client -->|usage read plus usage-scoped stand-in| atelier
+    atelier -.->|fetch settings with cookies, final hop only| upstream
+    upstream -.->|settings page| atelier
+    atelier -.->|parsed usage meters, no cookies| client

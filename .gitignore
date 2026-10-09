@@ -24,3 +24,15 @@ AGENTS.md.sha256
 # feedback-hub integration
 feedback
 learnings
+
+# piecrust-managed local operator artifacts — not version-controlled
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+HERMES.md
+AUTHORSHIP.md
+AGENTS.md.sha256
+PROJECT_INTENT.md
+PUBLIC_PRIVATE_BOUNDARY.md
+PIECRUST.json
+.githooks/

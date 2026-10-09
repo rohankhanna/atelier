@@ -5,12 +5,22 @@ description = "Pass-backed OAuth credential custody for local LLM tooling."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-dependencies = []
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.32",
+    "httpx>=0.28",
+]
 
 [dependency-groups]
 dev = [
     "pytest>=8.0",
+    "anyio[trio]>=4.0",
+    "httpx[asyncio]>=0.28",
 ]
+
+[project.scripts]
+atelier = "atelier.__main__:main"
+atelier-cloud-provider-a-reextract = "atelier.cloud_provider_a_reextract:main"
 
 [build-system]
 requires = ["hatchling"]
