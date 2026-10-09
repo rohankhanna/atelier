@@ -18,14 +18,7 @@ credentials.json
 vaults/
 originals/
 
-.hot-reload.watch
-# hot-reload state
-AGENTS.md.sha256
-# feedback-hub integration
-feedback
-learnings
-
-# piecrust-managed local operator artifacts — not version-controlled
+# Local operator artifacts — not version-controlled
 AGENTS.md
 CLAUDE.md
 GEMINI.md
@@ -36,3 +29,7 @@ PROJECT_INTENT.md
 PUBLIC_PRIVATE_BOUNDARY.md
 PIECRUST.json
 .githooks/
+
+# Integration artifacts — not version-controlled
+feedback
+learnings
