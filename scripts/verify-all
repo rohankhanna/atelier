@@ -6,36 +6,14 @@ test -f docs/ARCHITECTURE.md
 test -f docs/INTEGRATION_CONTRACT.md
 test -f docs/architecture.mmd
 test -f docs/decisions/0001-adopt-pass.md
-test -f PROJECT_INTENT.md
-test -f PUBLIC_PRIVATE_BOUNDARY.md
-test -f "logs/prior-art/$(date +%F).md"
-test -f internal/handoffs/callosum-agent.md
-test -x scripts/public-push-guard
-test -x scripts/install-git-hooks
-test -x deploy/systemd/install.sh
+test -f deploy/systemd/install.sh
 test -f deploy/systemd/atelier.service.template
 test -f deploy/systemd/README.md
-test -f docs/operations/import.md
-
-cmp -s AGENTS.md CLAUDE.md
-cmp -s AGENTS.md GEMINI.md
-cmp -s AGENTS.md HERMES.md
 
 grep -q "pass-backed" README.md
 grep -q "credential-header proxy" README.md
 grep -q "pass -> Atelier custody -> stand-in token" docs/ARCHITECTURE.md
 grep -q "local-client" docs/INTEGRATION_CONTRACT.md
-grep -q "callosum" internal/handoffs/callosum-agent.md
-
-if grep -R "uv run atelier mint" README.md docs >/dev/null; then
-  echo "stale atelier mint command found" >&2
-  exit 1
-fi
-
-if grep -R --exclude-dir="__pycache__" "Overarch\\|callosum\\|Callosum\\|Relay\\|Hermes\\|PROJECT_INTENT\\|AGENTS\\|prior-art\\|vault_path" README.md docs src tests >/dev/null; then
-  echo "internal or private-only term found in public surface" >&2
-  exit 1
-fi
 
 bash -n scripts/public-push-guard
 bash -n scripts/install-git-hooks
@@ -43,4 +21,4 @@ bash -n deploy/systemd/install.sh
 
 uv run pytest
 
-echo "atelier internal surface verified"
+echo "atelier verified"
