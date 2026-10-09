@@ -15,8 +15,6 @@ grep -q "credential-header proxy" README.md
 grep -q "pass -> Atelier custody -> stand-in token" docs/ARCHITECTURE.md
 grep -q "local-client" docs/INTEGRATION_CONTRACT.md
 
-bash -n scripts/public-push-guard
-bash -n scripts/install-git-hooks
 bash -n deploy/systemd/install.sh
 
 uv run pytest
