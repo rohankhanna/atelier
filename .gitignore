@@ -20,19 +20,17 @@ originals/
 
 # Local operator artifacts — not version-controlled
 AGENTS.md
-CLAUDE.md
-GEMINI.md
-HERMES.md
 AUTHORSHIP.md
-AGENTS.md.sha256
 PROJECT_INTENT.md
 PUBLIC_PRIVATE_BOUNDARY.md
-PIECRUST.json
 .githooks/
 
 # Integration artifacts — not version-controlled
 feedback
 learnings
+
+# Runtime logs — not version-controlled on public branch
+logs/
 
 # Editor backup files
 *.backup
