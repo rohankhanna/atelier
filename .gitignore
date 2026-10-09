@@ -33,3 +33,8 @@ PIECRUST.json
 # Integration artifacts — not version-controlled
 feedback
 learnings
+
+# Editor backup files
+*.backup
+*.backup2
+*.orig

@@ -1,0 +1,26 @@
+digraph atelier {
+    rankdir=LR;
+    bgcolor="transparent";
+    node [shape=box, style="rounded,filled", fillcolor="#e8e8e8", fontname="sans-serif"];
+    edge [fontname="sans-serif", fontsize=10];
+
+    passdb [label="pass encrypted store"];
+    atelier [label="Atelier custody and proxy"];
+    standin [label="Local stand-in token"];
+    client [label="Local client"];
+    upstream [label="Provider upstream"];
+    manager [label="Local process manager"];
+
+    manager -> atelier [label="start first"];
+    manager -> client [label="configure endpoint"];
+    passdb -> atelier [label="auth bundle"];
+    atelier -> passdb [label="rotated bundle back to pass"];
+    atelier -> standin [label="mint scoped token"];
+    standin -> client [label="local bearer"];
+    client -> atelier [label="unsigned upstream request plus stand-in"];
+    atelier -> upstream [label="inject provider credentials"];
+    upstream -> atelier [label="response"];
+    atelier -> client [label="response without provider tokens"];
+
+    passdb -> atelier [label="session-cookie jar", style=dashed];
+}

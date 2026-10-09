@@ -6,7 +6,7 @@ Atelier is a local credential-custody and credential-header proxy boundary for L
 pass -> Atelier custody -> stand-in token -> local client -> Atelier final-hop proxy -> provider upstream
 ```
 
-Diagram source: [architecture.mmd](architecture.mmd)
+Diagram source: [architecture.dot](architecture.dot) — generated: [architecture.svg](architecture.svg)
 
 ## Responsibilities
 
